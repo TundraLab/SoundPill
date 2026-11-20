@@ -2,7 +2,7 @@
   <img src="./icons/soundpill.svg" alt="SoundPill (by TundraLab)" width="96" />
 </p>
 
-# SoundPill (by TundraLab) v3.2.5
+# SoundPill v3.2.5
 
 [![GitHub](https://img.shields.io/badge/GitHub-TundraLab%2FSoundPill-181717?logo=github)](https://github.com/TundraLab/SoundPill)
 [![Autor Único](https://img.shields.io/badge/Autor%20e%20Dev%20Único-%40GustaHerin-181717?logo=github)](https://github.com/GustaHerin)
