@@ -10,7 +10,7 @@
 [![Pop!_OS](https://img.shields.io/badge/Pop!__OS-GNOME-48B9C7?logo=popos&logoColor=white)](#compatibilidade)
 [![GNOME Shell](https://img.shields.io/badge/GNOME%20Shell-47%20%2F%2051-4A86CF?logo=gnome&logoColor=white)](#compatibilidade)
 [![Wayland & X11](https://img.shields.io/badge/Wayland%20%26%20X11-Suportado-2C7FB8?logo=linux&logoColor=white)](#compatibilidade)
-[![GJS / GTK4](https://img.shields.io/badge/GJS-GTK4%20%2F%20Libadwaita-4A86CF?logo=gtk&logoColor=white)](#estrutura-do-projeto)
+[![GJS / GTK4](https://img.shields.io/badge/GJS-GTK4%20%2F%20Libadwaita-4A86CF?logo=gtk&logoColor=white)](#como-instalar)
 [![Licença](https://img.shields.io/badge/License-All%20Rights%20Reserved-red)](LICENSE)
 
 Produto oficial da **TundraLab**, criado e desenvolvido de forma independente e individual por **Gustavo Henrique Novaes Gomes ([@GustaHerin](https://github.com/GustaHerin))**.
@@ -56,20 +56,31 @@ Repositório oficial: https://github.com/TundraLab/Tundra-Media-Pill
 
 ## Como instalar
 
-1. Clone o repositório oficial da **TundraLab** e abra a pasta no terminal:
+### Instalação rápida via terminal (recomendado)
+
+Execute o comando abaixo no terminal para baixar, compilar o esquema e instalar a extensão automaticamente:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/TundraLab/Tundra-Media-Pill/main/install.sh | bash
+```
+
+> **Para desinstalar:**
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/TundraLab/Tundra-Media-Pill/main/install.sh | bash -s -- --uninstall
+> ```
+
+### Instalação manual pelo código-fonte
 
 ```bash
 git clone https://github.com/TundraLab/Tundra-Media-Pill.git
 cd Tundra-Media-Pill
 chmod +x install.sh
-./install.sh
+./install.sh --copy
 ```
 
-2. **Reinicie a sessão** (faça logout e entre novamente no sistema; se usar X11, pode apenas pressionar `Alt + F2`, digitar `r` e apertar `Enter`).
+Após instalar, **reinicie a sessão** (faça logout e entre novamente no sistema; no X11, pressione `Alt + F2`, digite `r` e aperte `Enter`).
 
 Pronto! A extensão já ficará ativada e configurada para iniciar sozinha sempre que você ligar o Linux.
-
-> **Para desinstalar:** basta rodar `./install.sh --uninstall` na mesma pasta.
 
 ---
 
@@ -78,25 +89,6 @@ Pronto! A extensão já ficará ativada e configurada para iniciar sozinha sempr
 - **Na barra superior**: clique na pílula quando estiver ouvindo algo para abrir o player completo, controlar a reprodução e ver a letra.
 - **Na área de trabalho**: clique no ícone de pino dentro do menu do player para fixar ou remover o widget da área de trabalho. Você pode arrastá-lo pela tela ou travar a posição pelo cadeado.
 - **Configurações**: abra o aplicativo **Extensões** do GNOME e clique na engrenagem ao lado de **Tundra Media Pill** (ou no botão de configurações dentro do próprio player).
-
----
-
-## Estrutura do projeto
-
-```text
-Tundra-Media-Pill/
-├── extension.js          # Ponto de entrada e pílula da barra superior
-├── prefs.js              # Janela de configurações (GTK4 / Libadwaita)
-├── metadata.json         # Metadados da extensão GNOME
-├── stylesheet.css        # Estilos da pílula, card e widget
-├── install.sh            # Instalador e compilador de schema
-├── icons/                # Ícone oficial SVG
-├── schemas/              # Esquema GSettings
-├── screenshots/          # Capturas de tela
-└── src/
-    ├── core/             # MPRIS2, busca de letras, traduções e autostart
-    └── ui/               # Card do player, widget da área de trabalho, waveform e paleta
-```
 
 ---
 

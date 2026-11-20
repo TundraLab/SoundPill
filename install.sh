@@ -2,11 +2,20 @@
 set -euo pipefail
 
 UUID="tundra-media-pill@tundralab.com.br"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ARCHIVE_URL="https://github.com/TundraLab/Tundra-Media-Pill/archive/refs/heads/main.tar.gz"
+REPO_GIT_URL="https://github.com/TundraLab/Tundra-Media-Pill.git"
 EXT_DIR="${HOME}/.local/share/gnome-shell/extensions"
 TARGET_DIR="${EXT_DIR}/${UUID}"
 AUTOSTART_DIR="${HOME}/.config/autostart"
 AUTOSTART_FILE="${AUTOSTART_DIR}/tundra-media-pill-autostart.desktop"
+TMP_DIR=""
+
+cleanup() {
+    if [[ -n "${TMP_DIR}" && -d "${TMP_DIR}" ]]; then
+        rm -rf "${TMP_DIR}"
+    fi
+}
+trap cleanup EXIT
 
 uninstall_extension() {
     if command -v gnome-extensions >/dev/null 2>&1; then
@@ -18,25 +27,62 @@ uninstall_extension() {
     exit 0
 }
 
-MODE="symlink"
+MODE="auto"
 for arg in "$@"; do
     case "${arg}" in
         --copy) MODE="copy" ;;
+        --symlink) MODE="symlink" ;;
         --uninstall) uninstall_extension ;;
         *)
-            echo "Uso: $0 [--copy | --uninstall]"
+            echo "Uso: $0 [--copy | --symlink | --uninstall]"
             exit 1
             ;;
     esac
 done
 
 if ! command -v glib-compile-schemas >/dev/null 2>&1; then
-    echo "Erro: 'glib-compile-schemas' não encontrado. Instale o pacote glib2-devel / libglib2.0-bin."
+    echo "Erro: 'glib-compile-schemas' não encontrado."
+    echo "Instale: sudo dnf install glib2-devel  (Fedora)  |  sudo apt install libglib2.0-bin  (Ubuntu/Pop!_OS)  |  sudo pacman -S glib2  (Arch)"
     exit 1
 fi
 
+SOURCE_PATH="${BASH_SOURCE[0]:-}"
+CANDIDATE_DIR=""
+if [[ -n "${SOURCE_PATH}" && -f "${SOURCE_PATH}" ]]; then
+    CANDIDATE_DIR="$(cd "$(dirname "${SOURCE_PATH}")" && pwd)"
+fi
+
+if [[ -n "${CANDIDATE_DIR}" && -f "${CANDIDATE_DIR}/metadata.json" ]]; then
+    SRC_DIR="${CANDIDATE_DIR}"
+    if [[ "${MODE}" == "auto" ]]; then
+        MODE="symlink"
+    fi
+else
+    MODE="copy"
+    TMP_DIR="$(mktemp -d)"
+    echo "Baixando Tundra Media Pill..."
+    if command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
+        curl -fsSL "${REPO_ARCHIVE_URL}" | tar -xz -C "${TMP_DIR}"
+        SRC_DIR="$(find "${TMP_DIR}" -maxdepth 1 -mindepth 1 -type d | head -n 1)"
+    elif command -v wget >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
+        wget -qO- "${REPO_ARCHIVE_URL}" | tar -xz -C "${TMP_DIR}"
+        SRC_DIR="$(find "${TMP_DIR}" -maxdepth 1 -mindepth 1 -type d | head -n 1)"
+    elif command -v git >/dev/null 2>&1; then
+        git clone --depth 1 "${REPO_GIT_URL}" "${TMP_DIR}/repo"
+        SRC_DIR="${TMP_DIR}/repo"
+    else
+        echo "Erro: é necessário ter 'curl' + 'tar' (ou 'wget' / 'git') instalados."
+        exit 1
+    fi
+
+    if [[ -z "${SRC_DIR}" || ! -f "${SRC_DIR}/metadata.json" ]]; then
+        echo "Erro: falha ao obter os arquivos do Tundra Media Pill."
+        exit 1
+    fi
+fi
+
 echo "Compilando esquemas GSettings..."
-glib-compile-schemas --strict "${SCRIPT_DIR}/schemas"
+glib-compile-schemas --strict "${SRC_DIR}/schemas"
 
 mkdir -p "${EXT_DIR}"
 if [[ -L "${TARGET_DIR}" || -e "${TARGET_DIR}" ]]; then
@@ -45,19 +91,19 @@ fi
 
 if [[ "${MODE}" == "copy" ]]; then
     mkdir -p "${TARGET_DIR}/schemas"
-    cp "${SCRIPT_DIR}/metadata.json" "${TARGET_DIR}/"
-    cp "${SCRIPT_DIR}/extension.js" "${TARGET_DIR}/"
-    cp "${SCRIPT_DIR}/prefs.js" "${TARGET_DIR}/"
-    cp "${SCRIPT_DIR}/stylesheet.css" "${TARGET_DIR}/"
-    cp "${SCRIPT_DIR}/LICENSE" "${TARGET_DIR}/"
-    cp -r "${SCRIPT_DIR}/src" "${TARGET_DIR}/"
-    cp -r "${SCRIPT_DIR}/icons" "${TARGET_DIR}/"
-    cp "${SCRIPT_DIR}/schemas/"*.xml "${TARGET_DIR}/schemas/"
-    cp "${SCRIPT_DIR}/schemas/gschemas.compiled" "${TARGET_DIR}/schemas/"
-    echo "Arquivos copiados para ${TARGET_DIR}"
+    cp "${SRC_DIR}/metadata.json" "${TARGET_DIR}/"
+    cp "${SRC_DIR}/extension.js" "${TARGET_DIR}/"
+    cp "${SRC_DIR}/prefs.js" "${TARGET_DIR}/"
+    cp "${SRC_DIR}/stylesheet.css" "${TARGET_DIR}/"
+    cp "${SRC_DIR}/LICENSE" "${TARGET_DIR}/"
+    cp -r "${SRC_DIR}/src" "${TARGET_DIR}/"
+    cp -r "${SRC_DIR}/icons" "${TARGET_DIR}/"
+    cp "${SRC_DIR}/schemas/"*.xml "${TARGET_DIR}/schemas/"
+    cp "${SRC_DIR}/schemas/gschemas.compiled" "${TARGET_DIR}/schemas/"
+    echo "Arquivos instalados em ${TARGET_DIR}"
 else
-    ln -s "${SCRIPT_DIR}" "${TARGET_DIR}"
-    echo "Link simbólico criado em ${TARGET_DIR} -> ${SCRIPT_DIR}"
+    ln -s "${SRC_DIR}" "${TARGET_DIR}"
+    echo "Link simbólico criado em ${TARGET_DIR} -> ${SRC_DIR}"
 fi
 
 mkdir -p "${AUTOSTART_DIR}"
