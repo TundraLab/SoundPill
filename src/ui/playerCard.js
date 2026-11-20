@@ -29,6 +29,7 @@ export class MediaPlayerCard {
         this._destroyed = false;
 
         this._isActiveView = variant === 'desktop';
+        this._actorDestroyed = false;
         this._waveTimerId = 0;
         this._pendingScrollId = 0;
         this._scrollLaterId = 0;
@@ -66,6 +67,9 @@ export class MediaPlayerCard {
                 : 'tundra-card tundra-menu-card',
         });
         this.actor.layout_manager.spacing = 12;
+        this.actor.connect('destroy', () => {
+            this._actorDestroyed = true;
+        });
 
         this._buildHeader();
         this._buildWaveform();
@@ -1175,16 +1179,21 @@ export class MediaPlayerCard {
                 this._scrollTweenId = 0;
                 return GLib.SOURCE_REMOVE;
             }
-            const elapsedUs = GLib.get_monotonic_time() - startUs;
-            const progress = Math.min(1, Math.max(0, elapsedUs / durationUs));
-            const eased = 1 - Math.pow(1 - progress, 3);
-            vadj.value = startVal + (destY - startVal) * eased;
+            try {
+                const elapsedUs = GLib.get_monotonic_time() - startUs;
+                const progress = Math.min(1, Math.max(0, elapsedUs / durationUs));
+                const eased = 1 - Math.pow(1 - progress, 3);
+                vadj.value = startVal + (destY - startVal) * eased;
 
-            if (progress >= 1) {
+                if (progress >= 1) {
+                    this._scrollTweenId = 0;
+                    return GLib.SOURCE_REMOVE;
+                }
+                return GLib.SOURCE_CONTINUE;
+            } catch (_e) {
                 this._scrollTweenId = 0;
                 return GLib.SOURCE_REMOVE;
             }
-            return GLib.SOURCE_CONTINUE;
         });
     }
 
@@ -1195,13 +1204,21 @@ export class MediaPlayerCard {
         this._cancelPendingScroll();
         this._cancelScrollTween();
 
-        if (this._lyricsScroll && this._lyricsMappedId) {
-            this._lyricsScroll.disconnect(this._lyricsMappedId);
+        if (!this._actorDestroyed && this._lyricsScroll && this._lyricsMappedId) {
+            try {
+                this._lyricsScroll.disconnect(this._lyricsMappedId);
+            } catch (_e) {
+                // Scroll actor may already be disposed
+            }
             this._lyricsMappedId = 0;
         }
 
         if (this._settings && this._settingsId) {
-            this._settings.disconnect(this._settingsId);
+            try {
+                this._settings.disconnect(this._settingsId);
+            } catch (_e) {
+                // Settings may already be disposed
+            }
             this._settingsId = 0;
         }
         if (this._controller && this._controllerListener) {
@@ -1209,9 +1226,15 @@ export class MediaPlayerCard {
             this._controllerListener = null;
         }
 
-        for (const lbl of this._lyricLineLabels) {
-            lbl.remove_all_transitions();
-            this._applyBlurToLine(lbl, 0);
+        if (!this._actorDestroyed) {
+            for (const lbl of this._lyricLineLabels) {
+                try {
+                    lbl.remove_all_transitions();
+                    this._applyBlurToLine(lbl, 0);
+                } catch (_e) {
+                    // Label may already be disposed
+                }
+            }
         }
 
         this._lyricLineLabels = [];
@@ -1221,6 +1244,14 @@ export class MediaPlayerCard {
         this._onCloseMenu = null;
         this._settings = null;
         this._controller = null;
-        this.actor.destroy();
+
+        if (!this._actorDestroyed && this.actor) {
+            this._actorDestroyed = true;
+            try {
+                this.actor.destroy();
+            } catch (_e) {
+                // Actor already destroyed by parent container
+            }
+        }
     }
 }

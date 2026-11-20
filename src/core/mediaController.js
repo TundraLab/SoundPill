@@ -17,6 +17,7 @@ const MPRIS_PLAYER_IFACE = 'org.mpris.MediaPlayer2.Player';
 
 const POSITION_TICK_MS = 200;
 const POSITION_RESYNC_MS = 2500;
+const MPRIS_RECONCILE_SEC = 3;
 
 export function formatMicroseconds(us) {
     if (!Number.isFinite(us) || us < 0)
@@ -338,7 +339,10 @@ class MprisMonitor {
         this._activeBusName = null;
         this._cancellable = new Gio.Cancellable();
         this._nameOwnerSignalId = 0;
+        this._sleepSignalId = 0;
+        this._sleepResyncTimerId = 0;
         this._trackResyncTimerId = 0;
+        this._reconcileTimerId = 0;
         this._destroyed = false;
 
         this._initWatcher();
@@ -359,12 +363,67 @@ class MprisMonitor {
                 if (!name.startsWith(MPRIS_PREFIX))
                     return;
 
+                // Recreate proxies when an existing bus name swaps owners
+                if (this._players.has(name))
+                    this._removePlayer(name);
                 if (newOwner)
                     this._addPlayer(name);
-                else
-                    this._removePlayer(name);
             }
         );
+
+        try {
+            this._sleepSignalId = Gio.DBus.system.signal_subscribe(
+                'org.freedesktop.login1',
+                'org.freedesktop.login1.Manager',
+                'PrepareForSleep',
+                '/org/freedesktop/login1',
+                null,
+                Gio.DBusSignalFlags.NONE,
+                (_conn, _sender, _path, _iface, _signal, params) => {
+                    if (this._destroyed)
+                        return;
+                    const [goingToSleep] = params.deep_unpack();
+                    if (!goingToSleep)
+                        this._scheduleResumeReconcile();
+                }
+            );
+        } catch (_e) {
+            this._sleepSignalId = 0;
+        }
+
+        this._reconcileMprisNames();
+        this._reconcileTimerId = GLib.timeout_add_seconds(
+            GLib.PRIORITY_DEFAULT,
+            MPRIS_RECONCILE_SEC,
+            () => {
+                if (this._destroyed) {
+                    this._reconcileTimerId = 0;
+                    return GLib.SOURCE_REMOVE;
+                }
+                this._reconcileMprisNames();
+                return GLib.SOURCE_CONTINUE;
+            }
+        );
+    }
+
+    _scheduleResumeReconcile() {
+        if (this._destroyed)
+            return;
+        if (this._sleepResyncTimerId) {
+            GLib.Source.remove(this._sleepResyncTimerId);
+            this._sleepResyncTimerId = 0;
+        }
+        this._sleepResyncTimerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 600, () => {
+            this._sleepResyncTimerId = 0;
+            if (!this._destroyed)
+                this._reconcileMprisNames();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _reconcileMprisNames() {
+        if (this._destroyed)
+            return;
 
         Gio.DBus.session.call(
             'org.freedesktop.DBus',
@@ -382,12 +441,107 @@ class MprisMonitor {
                 try {
                     const reply = conn.call_finish(res);
                     const [names] = reply.deep_unpack();
+                    const activeMpris = new Set();
+
                     for (const name of names) {
-                        if (name.startsWith(MPRIS_PREFIX))
+                        if (!name.startsWith(MPRIS_PREFIX))
+                            continue;
+                        activeMpris.add(name);
+                        if (!this._players.has(name)) {
                             this._addPlayer(name);
+                        } else {
+                            const entry = this._players.get(name);
+                            if (entry?.playerProxy && !this._isDisplayable(entry))
+                                this._refreshPlayerAll(entry);
+                        }
+                    }
+
+                    for (const trackedName of [...this._players.keys()]) {
+                        if (!activeMpris.has(trackedName))
+                            this._removePlayer(trackedName);
                     }
                 } catch (_e) {
-                    // Ignore if cancelled on disable
+                    // Ignore transient D-Bus lookup errors or cancellation on disable
+                }
+            }
+        );
+    }
+
+    _refreshPlayerAll(entry) {
+        if (this._destroyed || !entry?.busName || entry.cancellable.is_cancelled())
+            return;
+
+        Gio.DBus.session.call(
+            entry.busName,
+            MPRIS_PATH,
+            'org.freedesktop.DBus.Properties',
+            'GetAll',
+            new GLib.Variant('(s)', [MPRIS_PLAYER_IFACE]),
+            new GLib.VariantType('(a{sv})'),
+            Gio.DBusCallFlags.NONE,
+            -1,
+            entry.cancellable,
+            (conn, res) => {
+                if (this._destroyed || entry.cancellable.is_cancelled())
+                    return;
+                try {
+                    const reply = conn.call_finish(res);
+                    const [props] = reply.deep_unpack();
+                    const prevStatus = entry.playbackStatus;
+                    const prevTitle = entry.metadata?.title || '';
+                    const prevArtist = entry.metadata?.artist || '';
+
+                    const status = unpackVariant(props.PlaybackStatus);
+                    if (typeof status === 'string')
+                        entry.playbackStatus = status;
+
+                    if (props.Metadata)
+                        entry.metadata = parseMetadata(props.Metadata);
+
+                    const rate = unpackVariant(props.Rate);
+                    if (typeof rate === 'number' && rate > 0)
+                        entry.rate = rate;
+
+                    const canNext = unpackVariant(props.CanGoNext);
+                    if (typeof canNext === 'boolean')
+                        entry.canGoNext = canNext;
+
+                    const canPrev = unpackVariant(props.CanGoPrevious);
+                    if (typeof canPrev === 'boolean')
+                        entry.canGoPrevious = canPrev;
+
+                    const canPlay = unpackVariant(props.CanPlay);
+                    if (typeof canPlay === 'boolean')
+                        entry.canPlay = canPlay;
+
+                    const canPause = unpackVariant(props.CanPause);
+                    if (typeof canPause === 'boolean')
+                        entry.canPause = canPause;
+
+                    const canSeek = unpackVariant(props.CanSeek);
+                    if (typeof canSeek === 'boolean')
+                        entry.canSeek = canSeek;
+
+                    const trackChanged =
+                        entry.metadata.title !== prevTitle ||
+                        entry.metadata.artist !== prevArtist;
+                    const becameDisplayable =
+                        entry.playbackStatus !== prevStatus ||
+                        trackChanged ||
+                        this._isDisplayable(entry);
+
+                    if (becameDisplayable) {
+                        entry.lastUpdatedUs = GLib.get_monotonic_time();
+                        if (trackChanged) {
+                            entry.lastPositionUs = 0;
+                            entry.lastPositionTimestampUs = entry.lastUpdatedUs;
+                            this.refreshPosition(entry.busName);
+                        }
+                        this._selectBestPlayer();
+                        this._emitChange(trackChanged);
+                    }
+                } catch (_e) {
+                    // Ignore players that reject GetAll while initializing
                 }
             }
         );
@@ -487,7 +641,17 @@ class MprisMonitor {
             });
             entry.signalIds.push({proxy: playerProxy, id: seekId});
 
+            const ownerId = playerProxy.connect('notify::g-name-owner', proxy => {
+                if (this._destroyed)
+                    return;
+                if (!proxy.g_name_owner)
+                    this._removePlayer(busName);
+            });
+            entry.signalIds.push({proxy: playerProxy, id: ownerId});
+
             await this.refreshPosition(busName);
+            if (!this._destroyed && !entry.cancellable.is_cancelled() && !this._isDisplayable(entry))
+                this._refreshPlayerAll(entry);
         } catch (e) {
             if (!e.matches?.(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
                 console.error(`[SoundPill] Falha ao conectar player MPRIS ${busName}:`, e);
@@ -642,8 +806,13 @@ class MprisMonitor {
 
         entry.cancellable.cancel();
         for (const item of entry.signalIds) {
-            if (item.proxy && item.id)
-                item.proxy.disconnect(item.id);
+            if (item.proxy && item.id) {
+                try {
+                    item.proxy.disconnect(item.id);
+                } catch (_e) {
+                    // Proxy may already be disposed
+                }
+            }
         }
         entry.signalIds = [];
         this._players.delete(busName);
@@ -929,17 +1098,42 @@ class MprisMonitor {
             GLib.Source.remove(this._trackResyncTimerId);
             this._trackResyncTimerId = 0;
         }
+        if (this._sleepResyncTimerId) {
+            GLib.Source.remove(this._sleepResyncTimerId);
+            this._sleepResyncTimerId = 0;
+        }
+        if (this._reconcileTimerId) {
+            GLib.Source.remove(this._reconcileTimerId);
+            this._reconcileTimerId = 0;
+        }
         this._cancellable.cancel();
         if (this._nameOwnerSignalId) {
-            Gio.DBus.session.signal_unsubscribe(this._nameOwnerSignalId);
+            try {
+                Gio.DBus.session.signal_unsubscribe(this._nameOwnerSignalId);
+            } catch (_e) {
+                // Ignore if bus already closed
+            }
             this._nameOwnerSignalId = 0;
+        }
+        if (this._sleepSignalId) {
+            try {
+                Gio.DBus.system.signal_unsubscribe(this._sleepSignalId);
+            } catch (_e) {
+                // Ignore if bus already closed
+            }
+            this._sleepSignalId = 0;
         }
 
         for (const entry of this._players.values()) {
             entry.cancellable.cancel();
             for (const item of entry.signalIds) {
-                if (item.proxy && item.id)
-                    item.proxy.disconnect(item.id);
+                if (item.proxy && item.id) {
+                    try {
+                        item.proxy.disconnect(item.id);
+                    } catch (_e) {
+                        // Proxy may already be disposed
+                    }
+                }
             }
             entry.signalIds = [];
         }

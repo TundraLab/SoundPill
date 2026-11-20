@@ -288,9 +288,14 @@ class SoundPillIndicator extends PanelMenu.Button {
     }
 
     _setIndicatorVisible(visible) {
+        const wasVisible = this.visible;
         this.visible = visible;
         if (this.container && this.container !== this)
             this.container.visible = visible;
+        if (visible && !wasVisible) {
+            this._pillBox?.queue_relayout();
+            this.queue_relayout();
+        }
     }
 
     _syncPill() {
@@ -477,7 +482,7 @@ class SoundPillIndicator extends PanelMenu.Button {
     }
 
     _startVinylSpin() {
-        if (this._vinylSpinning || this._destroyed)
+        if (this._vinylSpinning || this._destroyed || !this._vinylActor)
             return;
 
         this._vinylSpinning = true;
@@ -502,6 +507,9 @@ class SoundPillIndicator extends PanelMenu.Button {
             return;
 
         this._vinylSpinning = false;
+        if (!this._vinylActor)
+            return;
+
         const currentAngle = ((this._vinylActor.rotation_angle_z % 360) + 360) % 360;
         this._vinylActor.remove_transition('vinyl-spin');
         this._vinylActor.remove_transition('vinyl-coast');
@@ -549,7 +557,11 @@ class SoundPillIndicator extends PanelMenu.Button {
         this._destroyed = true;
 
         if (this._settings && this._settingsChangedId) {
-            this._settings.disconnect(this._settingsChangedId);
+            try {
+                this._settings.disconnect(this._settingsChangedId);
+            } catch (_e) {
+                // Settings object may already be disposed
+            }
             this._settingsChangedId = 0;
         }
         if (this._controller && this._controllerListener) {
@@ -560,11 +572,21 @@ class SoundPillIndicator extends PanelMenu.Button {
         this._stopMarquee();
         this._stopEqAnimation();
 
-        if (this._vinylActor)
-            this._vinylActor.remove_all_transitions();
+        if (this._vinylActor) {
+            try {
+                this._vinylActor.remove_all_transitions();
+            } catch (_e) {
+                // Actor may already be disposed
+            }
+        }
 
-        this._card?.destroy();
+        try {
+            this._card?.destroy();
+        } catch (_e) {
+            // Card actor may already be disposed by parent menu
+        }
         this._card = null;
+        this._vinylActor = null;
         this._pillEqCanvas = null;
         this._settings = null;
         this._controller = null;
@@ -613,8 +635,20 @@ export default class SoundPillExtension extends Extension {
 
     _mountIndicator() {
         if (this._indicator) {
-            this._indicator.destroy();
+            try {
+                this._indicator.destroy();
+            } catch (_e) {
+                // Ignore if already disposed
+            }
             this._indicator = null;
+        }
+
+        if (Main.panel.statusArea.soundpill) {
+            try {
+                Main.panel.statusArea.soundpill.destroy();
+            } catch (_e) {
+                delete Main.panel.statusArea.soundpill;
+            }
         }
 
         const box = this._settings.get_string('panel-position') || 'center';
@@ -657,23 +691,40 @@ export default class SoundPillExtension extends Extension {
 
     disable() {
         if (this._settings && this._settingsSignalIds) {
-            for (const id of this._settingsSignalIds)
-                this._settings.disconnect(id);
+            for (const id of this._settingsSignalIds) {
+                try {
+                    this._settings.disconnect(id);
+                } catch (_e) {
+                    // Settings object may already be disposed
+                }
+            }
             this._settingsSignalIds = [];
         }
 
         if (this._desktopWidget) {
-            this._desktopWidget.destroy();
+            try {
+                this._desktopWidget.destroy();
+            } catch (_e) {
+                // Ignore widget teardown errors on shell lock/disable
+            }
             this._desktopWidget = null;
         }
 
         if (this._indicator) {
-            this._indicator.destroy();
+            try {
+                this._indicator.destroy();
+            } catch (_e) {
+                // Ignore indicator teardown errors on shell lock/disable
+            }
             this._indicator = null;
         }
 
         if (this._controller) {
-            this._controller.destroy();
+            try {
+                this._controller.destroy();
+            } catch (_e) {
+                // Ignore controller teardown errors on shell lock/disable
+            }
             this._controller = null;
         }
 

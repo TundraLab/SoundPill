@@ -348,6 +348,11 @@ export class TundraDesktopWidget {
             return;
 
         const signals = [];
+        const destroyId = actor.connect('destroy', () => {
+            this._windowActorSignals.delete(actor);
+        });
+        signals.push({obj: actor, id: destroyId});
+
         const visId = actor.connect('notify::visible', () => this._scheduleRestack());
         signals.push({obj: actor, id: visId});
 
@@ -375,8 +380,13 @@ export class TundraDesktopWidget {
         if (!signals)
             return;
         for (const item of signals) {
-            if (item.obj && item.id)
-                item.obj.disconnect(item.id);
+            if (item.obj && item.id) {
+                try {
+                    item.obj.disconnect(item.id);
+                } catch (_e) {
+                    // Actor or MetaWindow may already be disposed
+                }
+            }
         }
         this._windowActorSignals.delete(actor);
     }
@@ -530,14 +540,27 @@ export class TundraDesktopWidget {
             this._untrackWindowActor(actor);
 
         for (const item of this._layerSignalIds) {
-            if (item.obj && item.id)
-                item.obj.disconnect(item.id);
+            if (item.obj && item.id) {
+                try {
+                    item.obj.disconnect(item.id);
+                } catch (_e) {
+                    // Global manager may already be disposed
+                }
+            }
         }
         this._layerSignalIds = [];
 
-        for (const id of this._overviewSignalIds)
-            Main.overview.disconnect(id);
+        for (const id of this._overviewSignalIds) {
+            try {
+                Main.overview.disconnect(id);
+            } catch (_e) {
+                // Ignore if overview signal already gone
+            }
+        }
         this._overviewSignalIds = [];
+
+        if (!this._container)
+            return;
 
         const parent = this._container.get_parent();
         if (!parent)
@@ -644,20 +667,40 @@ export class TundraDesktopWidget {
             this._controllerListener = null;
         }
         if (this._settings && this._settingsId) {
-            this._settings.disconnect(this._settingsId);
+            try {
+                this._settings.disconnect(this._settingsId);
+            } catch (_e) {
+                // Settings object may already be disposed
+            }
             this._settingsId = 0;
         }
         if (this._monitorsId) {
-            Main.layoutManager.disconnect(this._monitorsId);
+            try {
+                Main.layoutManager.disconnect(this._monitorsId);
+            } catch (_e) {
+                // LayoutManager may already be disposed
+            }
             this._monitorsId = 0;
         }
 
-        this._unmountFromLayer();
+        try {
+            this._unmountFromLayer();
+        } catch (_e) {
+            // Container may already be unparented
+        }
 
-        this._card?.destroy();
+        try {
+            this._card?.destroy();
+        } catch (_e) {
+            // Card may already be disposed
+        }
         this._card = null;
 
-        this._container?.destroy();
+        try {
+            this._container?.destroy();
+        } catch (_e) {
+            // Container may already be disposed
+        }
         this._container = null;
         this._settings = null;
         this._controller = null;
