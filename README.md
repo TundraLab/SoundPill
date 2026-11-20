@@ -75,11 +75,6 @@ sudo dnf install -y curl git tar glib2-devel libsoup3 gtk4 libadwaita gdk-pixbuf
 sudo pacman -S --needed curl git tar glib2 libsoup3 gtk4 libadwaita gdk-pixbuf2 gnome-shell
 ```
 
-**openSUSE:**
-```bash
-sudo zypper install -y curl git tar glib2-tools typelib-1_0-Soup-3_0 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 typelib-1_0-GdkPixbuf-2_0
-```
-
 > Se faltar alguma dependência ao executar o instalador, o próprio `install.sh` detecta o que está ausente e pergunta se você quer instalar via `sudo` (ou use `--yes` para instalar direto).
 
 ### 2. Instalar a extensão via terminal (recomendado)
