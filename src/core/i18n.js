@@ -169,8 +169,8 @@ const TRANSLATIONS = {
 
             aboutDesc: 'Player de mídia na barra do GNOME com capa em vinil, waveform, letras sincronizadas e widget na área de trabalho.',
             aboutProjectGroup: 'Projeto',
-            aboutAuthorLabel: 'Autor',
-            aboutOrgLabel: 'Organização',
+            aboutAuthorLabel: 'Autor e Dev Único',
+            aboutOrgLabel: 'Empresa',
             aboutVersionLabel: 'Versão',
             aboutShellLabel: 'GNOME Shell',
             aboutUuidLabel: 'UUID',
@@ -178,7 +178,7 @@ const TRANSLATIONS = {
             aboutLicenseValue: 'Proprietária (Todos os direitos reservados)',
             aboutLinksGroup: 'Links',
             aboutSiteTitle: 'Site da TundraLab',
-            aboutGhOrgTitle: 'GitHub da TundraLab',
+            aboutGhOrgTitle: 'Repositório oficial (TundraLab)',
             aboutGhAuthorTitle: 'GitHub de Gustavo Henrique (@GustaHerin)',
             aboutChangelogGroup: 'Registro de versões',
             releases: [
@@ -357,8 +357,8 @@ const TRANSLATIONS = {
 
             aboutDesc: 'GNOME top bar media player with spinning vinyl art, waveform, synced lyrics, and desktop widget.',
             aboutProjectGroup: 'Project',
-            aboutAuthorLabel: 'Author',
-            aboutOrgLabel: 'Organization',
+            aboutAuthorLabel: 'Sole Author & Dev',
+            aboutOrgLabel: 'Company',
             aboutVersionLabel: 'Version',
             aboutShellLabel: 'GNOME Shell',
             aboutUuidLabel: 'UUID',
@@ -366,7 +366,7 @@ const TRANSLATIONS = {
             aboutLicenseValue: 'Proprietary (All rights reserved)',
             aboutLinksGroup: 'Links',
             aboutSiteTitle: 'TundraLab Website',
-            aboutGhOrgTitle: 'TundraLab GitHub',
+            aboutGhOrgTitle: 'Official Repository (TundraLab)',
             aboutGhAuthorTitle: 'Gustavo Henrique GitHub (@GustaHerin)',
             aboutChangelogGroup: 'Changelog',
             releases: [

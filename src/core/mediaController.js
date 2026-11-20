@@ -7,7 +7,7 @@ import Soup from 'gi://Soup?version=3.0';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import {buildAccentPalette, normalizeHex, rgbToHex} from './accentColor.js';
+import {buildAccentPalette, normalizeHex, rgbToHex} from '../ui/accentColor.js';
 import {LyricsClient, findActiveLineIndex} from './lyrics.js';
 
 const MPRIS_PREFIX = 'org.mpris.MediaPlayer2.';

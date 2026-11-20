@@ -7,8 +7,8 @@ import St from 'gi://St';
 
 import {ensureActorVisibleInScrollView} from 'resource:///org/gnome/shell/misc/animationUtils.js';
 
-import {getStrings, resolveLanguage} from './i18n.js';
-import {formatMicroseconds} from './mediaController.js';
+import {getStrings, resolveLanguage} from '../core/i18n.js';
+import {formatMicroseconds} from '../core/mediaController.js';
 import {drawCardWaveform} from './waveform.js';
 
 const WAVE_ANIM_INTERVAL_MS = 90;

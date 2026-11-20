@@ -6,9 +6,9 @@ import Gtk from 'gi://Gtk';
 
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import {ACCENT_PRESETS, getPresetByHex, hexToRgb, normalizeHex} from './accentColor.js';
-import {clearCoverCache, syncAutostartEntry} from './autostart.js';
-import {getStrings, resolveLanguage} from './i18n.js';
+import {ACCENT_PRESETS, getPresetByHex, hexToRgb, normalizeHex} from './src/ui/accentColor.js';
+import {clearCoverCache, syncAutostartEntry} from './src/core/autostart.js';
+import {getStrings, resolveLanguage} from './src/core/i18n.js';
 
 const LANGUAGE_KEYS = ['auto', 'pt', 'en'];
 const PANEL_POSITION_KEYS = ['left', 'center', 'right'];
@@ -773,8 +773,8 @@ export default class TundraMediaPillPreferences extends ExtensionPreferences {
         );
         addLinkRow(
             t.aboutGhOrgTitle,
-            'https://github.com/TundraLab',
-            'https://github.com/TundraLab'
+            'https://github.com/TundraLab/Tundra-Media-Pill',
+            'https://github.com/TundraLab/Tundra-Media-Pill'
         );
         addLinkRow(
             t.aboutGhAuthorTitle,

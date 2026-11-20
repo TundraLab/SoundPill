@@ -2,11 +2,22 @@
   <img src="./icons/tundra-media-pill.svg" alt="Tundra Media Pill" width="96" />
 </p>
 
-# Tundra Media Pill
+# Tundra Media Pill v3.2.5
 
-Extensão de mídia para a barra superior do GNOME com controles de reprodução, letras sincronizadas e widget na área de trabalho.
+[![GitHub](https://img.shields.io/badge/GitHub-TundraLab%2FTundra--Media--Pill-181717?logo=github)](https://github.com/TundraLab/Tundra-Media-Pill)
+[![Autor Único](https://img.shields.io/badge/Autor%20e%20Dev%20Único-%40GustaHerin-181717?logo=github)](https://github.com/GustaHerin)
+[![Fedora](https://img.shields.io/badge/Fedora-Workstation-51A2DA?logo=fedora&logoColor=white)](#compatibilidade)
+[![Pop!_OS](https://img.shields.io/badge/Pop!__OS-GNOME-48B9C7?logo=popos&logoColor=white)](#compatibilidade)
+[![GNOME Shell](https://img.shields.io/badge/GNOME%20Shell-47%20%2F%2051-4A86CF?logo=gnome&logoColor=white)](#compatibilidade)
+[![Wayland & X11](https://img.shields.io/badge/Wayland%20%26%20X11-Suportado-2C7FB8?logo=linux&logoColor=white)](#compatibilidade)
+[![GJS / GTK4](https://img.shields.io/badge/GJS-GTK4%20%2F%20Libadwaita-4A86CF?logo=gtk&logoColor=white)](#estrutura-do-projeto)
+[![Licença](https://img.shields.io/badge/License-All%20Rights%20Reserved-red)](LICENSE)
 
-Feito por **TundraLab - Gustavo Henrique Novaes Gomes ([@GustaHerin](https://github.com/GustaHerin))** | [GitHub da TundraLab](https://github.com/TundraLab)
+Produto oficial da **TundraLab**, criado e desenvolvido de forma independente e individual por **Gustavo Henrique Novaes Gomes ([@GustaHerin](https://github.com/GustaHerin))**.
+
+Extensão de mídia para a barra superior do GNOME com controles de reprodução, capa em vinil, letras sincronizadas, waveform personalizável e widget na área de trabalho.
+
+Repositório oficial: https://github.com/TundraLab/Tundra-Media-Pill
 
 ---
 
@@ -38,21 +49,23 @@ Feito por **TundraLab - Gustavo Henrique Novaes Gomes ([@GustaHerin](https://git
 
 ## Compatibilidade
 
-- **GNOME 47, 48, 49, 50 e 51** (Ubuntu, Fedora, Arch, etc.).
+- **GNOME 47, 48, 49, 50 e 51** (Fedora Workstation, Pop!_OS, Ubuntu, Arch Linux e demais distribuições com GNOME).
+- Suporte completo a **Wayland** e **X11**.
 
 ---
 
 ## Como instalar
 
-1. Baixe este projeto e abra a pasta no terminal.
-2. Execute o instalador:
+1. Clone o repositório oficial da **TundraLab** e abra a pasta no terminal:
 
 ```bash
+git clone https://github.com/TundraLab/Tundra-Media-Pill.git
+cd Tundra-Media-Pill
 chmod +x install.sh
 ./install.sh
 ```
 
-3. **Reinicie a sessão** (faça logout e entre novamente no sistema; se usar X11, pode apenas pressionar `Alt + F2`, digitar `r` e apertar `Enter`).
+2. **Reinicie a sessão** (faça logout e entre novamente no sistema; se usar X11, pode apenas pressionar `Alt + F2`, digitar `r` e apertar `Enter`).
 
 Pronto! A extensão já ficará ativada e configurada para iniciar sozinha sempre que você ligar o Linux.
 
@@ -68,9 +81,28 @@ Pronto! A extensão já ficará ativada e configurada para iniciar sozinha sempr
 
 ---
 
-## Licença
+## Estrutura do projeto
 
-Copyright (c) 2026 **TundraLab - Gustavo Henrique Novaes Gomes (@GustaHerin)**  
-Todos os direitos reservados.
+```text
+Tundra-Media-Pill/
+├── extension.js          # Ponto de entrada e pílula da barra superior
+├── prefs.js              # Janela de configurações (GTK4 / Libadwaita)
+├── metadata.json         # Metadados da extensão GNOME
+├── stylesheet.css        # Estilos da pílula, card e widget
+├── install.sh            # Instalador e compilador de schema
+├── icons/                # Ícone oficial SVG
+├── schemas/              # Esquema GSettings
+├── screenshots/          # Capturas de tela
+└── src/
+    ├── core/             # MPRIS2, busca de letras, traduções e autostart
+    └── ui/               # Card do player, widget da área de trabalho, waveform e paleta
+```
 
-Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes. É proibida a cópia, modificação ou redistribuição sem autorização do autor.
+---
+
+## Licença e Propriedade Intelectual
+
+**Todos os Direitos Reservados (`All Rights Reserved`)**  
+Copyright © 2026 **TundraLab** e **Gustavo Henrique Novaes Gomes** ([@GustaHerin](https://github.com/GustaHerin)).
+
+Produto proprietário da **TundraLab**, concebido e desenvolvido de forma independente por seu autor único. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes. É proibida a cópia, modificação ou redistribuição sem autorização prévia por escrito.

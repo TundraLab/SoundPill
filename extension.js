@@ -9,12 +9,12 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-import {syncAutostartEntry} from './autostart.js';
-import {TundraDesktopWidget} from './desktopWidget.js';
-import {getStrings, resolveLanguage} from './i18n.js';
-import {TundraMediaController} from './mediaController.js';
-import {MediaPlayerCard} from './playerCard.js';
-import {drawPillVisualizer} from './waveform.js';
+import {syncAutostartEntry} from './src/core/autostart.js';
+import {getStrings, resolveLanguage} from './src/core/i18n.js';
+import {TundraMediaController} from './src/core/mediaController.js';
+import {TundraDesktopWidget} from './src/ui/desktopWidget.js';
+import {MediaPlayerCard} from './src/ui/playerCard.js';
+import {drawPillVisualizer} from './src/ui/waveform.js';
 
 const DEFAULT_MARQUEE_WIDTH = 220;
 const EQ_ANIM_INTERVAL_MS = 100;
