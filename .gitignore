@@ -1,0 +1,10 @@
+schemas/gschemas.compiled
+*.zip
+*.mo
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
