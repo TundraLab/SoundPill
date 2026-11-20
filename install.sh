@@ -27,24 +27,120 @@ uninstall_extension() {
     exit 0
 }
 
+has_typelib() {
+    local name="$1"
+    local dirs=(
+        "/usr/lib64/girepository-1.0"
+        "/usr/lib/girepository-1.0"
+        "/usr/local/lib64/girepository-1.0"
+        "/usr/local/lib/girepository-1.0"
+    )
+
+    if [[ -n "${GI_TYPELIB_PATH:-}" ]]; then
+        local IFS=":"
+        for dir in ${GI_TYPELIB_PATH}; do
+            [[ -f "${dir}/${name}" ]] && return 0
+        done
+    fi
+
+    for dir in "${dirs[@]}" /usr/lib/*/girepository-1.0; do
+        [[ -f "${dir}/${name}" ]] && return 0
+    done
+
+    return 1
+}
+
+detect_pkg_manager() {
+    if command -v apt-get >/dev/null 2>&1; then
+        echo "apt"
+    elif command -v dnf >/dev/null 2>&1; then
+        echo "dnf"
+    elif command -v pacman >/dev/null 2>&1; then
+        echo "pacman"
+    elif command -v zypper >/dev/null 2>&1; then
+        echo "zypper"
+    else
+        echo "unknown"
+    fi
+}
+
+print_install_cmd() {
+    local pm="$1"
+    case "${pm}" in
+        apt)
+            echo "sudo apt update && sudo apt install -y curl git tar libglib2.0-bin gir1.2-soup-3.0 gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-gdkpixbuf-2.0 gnome-shell-extension-prefs"
+            ;;
+        dnf)
+            echo "sudo dnf install -y curl git tar glib2-devel libsoup3 gtk4 libadwaita gdk-pixbuf2 gnome-extensions-app"
+            ;;
+        pacman)
+            echo "sudo pacman -S --needed curl git tar glib2 libsoup3 gtk4 libadwaita gdk-pixbuf2 gnome-shell"
+            ;;
+        zypper)
+            echo "sudo zypper install -y curl git tar glib2-tools typelib-1_0-Soup-3_0 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 typelib-1_0-GdkPixbuf-2_0"
+            ;;
+        *)
+            echo "Instale pela sua distribuição: curl, tar, glib-compile-schemas, libsoup 3.0, GTK4, Libadwaita, GdkPixbuf 2.0 e gnome-shell."
+            ;;
+    esac
+}
+
+install_system_deps() {
+    local pm="$1"
+    case "${pm}" in
+        apt)
+            sudo apt-get update
+            sudo apt-get install -y curl git tar libglib2.0-bin gir1.2-soup-3.0 gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-gdkpixbuf-2.0 gnome-shell-extension-prefs
+            ;;
+        dnf)
+            sudo dnf install -y curl git tar glib2-devel libsoup3 gtk4 libadwaita gdk-pixbuf2 gnome-extensions-app
+            ;;
+        pacman)
+            sudo pacman -S --needed --noconfirm curl git tar glib2 libsoup3 gtk4 libadwaita gdk-pixbuf2 gnome-shell
+            ;;
+        zypper)
+            sudo zypper --non-interactive install curl git tar glib2-tools typelib-1_0-Soup-3_0 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 typelib-1_0-GdkPixbuf-2_0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+collect_missing_deps() {
+    local need_download="$1"
+    MISSING_DEPS=()
+
+    command -v glib-compile-schemas >/dev/null 2>&1 || MISSING_DEPS+=("glib-compile-schemas")
+    command -v gsettings >/dev/null 2>&1 || MISSING_DEPS+=("gsettings")
+    command -v gnome-shell >/dev/null 2>&1 || MISSING_DEPS+=("gnome-shell")
+
+    if [[ "${need_download}" == "1" ]]; then
+        if ! { (command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1) || (command -v wget >/dev/null 2>&1 && command -v tar >/dev/null 2>&1) || command -v git >/dev/null 2>&1; }; then
+            MISSING_DEPS+=("curl+tar (ou git)")
+        fi
+    fi
+
+    has_typelib "Soup-3.0.typelib" || MISSING_DEPS+=("Soup-3.0 (libsoup 3)")
+    has_typelib "Gtk-4.0.typelib" || MISSING_DEPS+=("Gtk-4.0 (GTK4)")
+    has_typelib "Adw-1.typelib" || MISSING_DEPS+=("Adw-1 (Libadwaita)")
+    has_typelib "GdkPixbuf-2.0.typelib" || MISSING_DEPS+=("GdkPixbuf-2.0")
+}
+
 MODE="auto"
+AUTO_YES="0"
 for arg in "$@"; do
     case "${arg}" in
         --copy) MODE="copy" ;;
         --symlink) MODE="symlink" ;;
+        --yes|-y) AUTO_YES="1" ;;
         --uninstall) uninstall_extension ;;
         *)
-            echo "Uso: $0 [--copy | --symlink | --uninstall]"
+            echo "Uso: $0 [--copy | --symlink | --yes | --uninstall]"
             exit 1
             ;;
     esac
 done
-
-if ! command -v glib-compile-schemas >/dev/null 2>&1; then
-    echo "Erro: 'glib-compile-schemas' não encontrado."
-    echo "Instale: sudo dnf install glib2-devel  (Fedora)  |  sudo apt install libglib2.0-bin  (Ubuntu/Pop!_OS)  |  sudo pacman -S glib2  (Arch)"
-    exit 1
-fi
 
 SOURCE_PATH="${BASH_SOURCE[0]:-}"
 CANDIDATE_DIR=""
@@ -52,7 +148,55 @@ if [[ -n "${SOURCE_PATH}" && -f "${SOURCE_PATH}" ]]; then
     CANDIDATE_DIR="$(cd "$(dirname "${SOURCE_PATH}")" && pwd)"
 fi
 
+NEED_DOWNLOAD="1"
 if [[ -n "${CANDIDATE_DIR}" && -f "${CANDIDATE_DIR}/metadata.json" ]]; then
+    NEED_DOWNLOAD="0"
+fi
+
+MISSING_DEPS=()
+collect_missing_deps "${NEED_DOWNLOAD}"
+
+if [[ "${#MISSING_DEPS[@]}" -gt 0 ]]; then
+    PM="$(detect_pkg_manager)"
+    INSTALL_CMD="$(print_install_cmd "${PM}")"
+
+    echo "Dependências ausentes detectadas: ${MISSING_DEPS[*]}"
+    echo ""
+    echo "Comando recomendado para o seu sistema:"
+    echo "  ${INSTALL_CMD}"
+    echo ""
+
+    SHOULD_INSTALL="0"
+    if [[ "${AUTO_YES}" == "1" ]]; then
+        SHOULD_INSTALL="1"
+    elif [[ -r /dev/tty && -w /dev/tty && "${PM}" != "unknown" ]]; then
+        # Read from /dev/tty so piped curl | bash execution stays interactive.
+        printf "Deseja instalar essas dependências agora via sudo? [S/n] " > /dev/tty
+        read -r REPLY < /dev/tty || REPLY="n"
+        if [[ -z "${REPLY}" || "${REPLY}" =~ ^[sSyY]$ ]]; then
+            SHOULD_INSTALL="1"
+        fi
+    fi
+
+    if [[ "${SHOULD_INSTALL}" == "1" && "${PM}" != "unknown" ]]; then
+        echo "Instalando dependências do sistema..."
+        if [[ -r /dev/tty && -w /dev/tty ]]; then
+            install_system_deps "${PM}" < /dev/tty
+        else
+            install_system_deps "${PM}"
+        fi
+        collect_missing_deps "${NEED_DOWNLOAD}"
+    fi
+
+    if [[ "${#MISSING_DEPS[@]}" -gt 0 ]]; then
+        echo "Erro: dependências ainda ausentes: ${MISSING_DEPS[*]}"
+        echo "Execute o comando abaixo e rode o instalador novamente:"
+        echo "  ${INSTALL_CMD}"
+        exit 1
+    fi
+fi
+
+if [[ "${NEED_DOWNLOAD}" == "0" ]]; then
     SRC_DIR="${CANDIDATE_DIR}"
     if [[ "${MODE}" == "auto" ]]; then
         MODE="symlink"

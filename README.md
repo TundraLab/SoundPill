@@ -56,7 +56,33 @@ Repositório oficial: https://github.com/TundraLab/Tundra-Media-Pill
 
 ## Como instalar
 
-### Instalação rápida via terminal (recomendado)
+### 1. Instalar dependências (Linux recém-instalado)
+
+Em instalações novas de Linux, ferramentas como `curl`, `glib-compile-schemas` e bibliotecas do GNOME (`GTK4`, `Libadwaita`, `libsoup 3`) podem não vir instaladas por padrão. Rode o comando da sua distribuição antes de instalar:
+
+**Ubuntu / Pop!_OS / Debian:**
+```bash
+sudo apt update && sudo apt install -y curl git tar libglib2.0-bin gir1.2-soup-3.0 gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-gdkpixbuf-2.0 gnome-shell-extension-prefs
+```
+
+**Fedora Workstation:**
+```bash
+sudo dnf install -y curl git tar glib2-devel libsoup3 gtk4 libadwaita gdk-pixbuf2 gnome-extensions-app
+```
+
+**Arch Linux / Manjaro / EndeavourOS:**
+```bash
+sudo pacman -S --needed curl git tar glib2 libsoup3 gtk4 libadwaita gdk-pixbuf2 gnome-shell
+```
+
+**openSUSE:**
+```bash
+sudo zypper install -y curl git tar glib2-tools typelib-1_0-Soup-3_0 typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1 typelib-1_0-GdkPixbuf-2_0
+```
+
+> Se faltar alguma dependência ao executar o instalador, o próprio `install.sh` detecta o que está ausente e pergunta se você quer instalar via `sudo` (ou use `--yes` para instalar direto).
+
+### 2. Instalar a extensão via terminal (recomendado)
 
 Execute o comando abaixo no terminal para baixar, compilar o esquema e instalar a extensão automaticamente:
 
