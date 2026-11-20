@@ -205,11 +205,11 @@ class AlbumArtLoader {
     constructor() {
         this._session = new Soup.Session({
             timeout: 10,
-            user_agent: 'TundraMediaPill/1.0 (https://tundralab.com.br)',
+            user_agent: 'SoundPill/1.0 (https://tundralab.com.br)',
         });
         this._cacheDir = GLib.build_filenamev([
             GLib.get_user_cache_dir(),
-            'tundra-media-pill',
+            'soundpill',
         ]);
         GLib.mkdir_with_parents(this._cacheDir, 0o755);
         this._urlCache = new Map();
@@ -490,7 +490,7 @@ class MprisMonitor {
             await this.refreshPosition(busName);
         } catch (e) {
             if (!e.matches?.(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
-                console.error(`[TundraMediaPill] Falha ao conectar player MPRIS ${busName}:`, e);
+                console.error(`[SoundPill] Falha ao conectar player MPRIS ${busName}:`, e);
             if (this._players.get(busName) === entry)
                 this._removePlayer(busName);
             return;

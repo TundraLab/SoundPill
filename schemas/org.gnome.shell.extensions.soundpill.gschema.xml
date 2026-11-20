@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <enum id="org.gnome.shell.extensions.tundra-media-pill.PanelPosition">
+  <enum id="org.gnome.shell.extensions.soundpill.PanelPosition">
     <value nick="left" value="0"/>
     <value nick="center" value="1"/>
     <value nick="right" value="2"/>
   </enum>
 
-  <enum id="org.gnome.shell.extensions.tundra-media-pill.WidgetLayer">
+  <enum id="org.gnome.shell.extensions.soundpill.WidgetLayer">
     <value nick="desktop" value="0"/>
     <value nick="floating" value="1"/>
   </enum>
 
-  <enum id="org.gnome.shell.extensions.tundra-media-pill.WaveformStyle">
+  <enum id="org.gnome.shell.extensions.soundpill.WaveformStyle">
     <value nick="classic" value="0"/>
     <value nick="mirror" value="1"/>
     <value nick="equalizer" value="2"/>
@@ -24,7 +24,7 @@
     <value nick="dual-rail" value="9"/>
   </enum>
 
-  <enum id="org.gnome.shell.extensions.tundra-media-pill.PillEqStyle">
+  <enum id="org.gnome.shell.extensions.soundpill.PillEqStyle">
     <value nick="bars" value="0"/>
     <value nick="mirror" value="1"/>
     <value nick="equalizer" value="2"/>
@@ -34,20 +34,20 @@
     <value nick="pulse" value="6"/>
   </enum>
 
-  <enum id="org.gnome.shell.extensions.tundra-media-pill.Language">
+  <enum id="org.gnome.shell.extensions.soundpill.Language">
     <value nick="auto" value="0"/>
     <value nick="pt" value="1"/>
     <value nick="en" value="2"/>
   </enum>
 
-  <schema id="org.gnome.shell.extensions.tundra-media-pill" path="/org/gnome/shell/extensions/tundra-media-pill/">
-    <key name="language" enum="org.gnome.shell.extensions.tundra-media-pill.Language">
+  <schema id="org.gnome.shell.extensions.soundpill" path="/org/gnome/shell/extensions/soundpill/">
+    <key name="language" enum="org.gnome.shell.extensions.soundpill.Language">
       <default>'auto'</default>
       <summary>Idioma da interface / Interface language</summary>
       <description>Define o idioma exibido na extensão e nas configurações.</description>
     </key>
 
-    <key name="panel-position" enum="org.gnome.shell.extensions.tundra-media-pill.PanelPosition">
+    <key name="panel-position" enum="org.gnome.shell.extensions.soundpill.PanelPosition">
       <default>'center'</default>
       <summary>Posição da pílula na barra superior</summary>
       <description>Define em qual região da barra superior do GNOME a pílula será exibida.</description>
@@ -96,7 +96,7 @@
       <description>Mostra as barras animadas do equalizador ao lado do texto da pílula.</description>
     </key>
 
-    <key name="pill-eq-style" enum="org.gnome.shell.extensions.tundra-media-pill.PillEqStyle">
+    <key name="pill-eq-style" enum="org.gnome.shell.extensions.soundpill.PillEqStyle">
       <default>'bars'</default>
       <summary>Estilo das ondas na pílula</summary>
       <description>Define o estilo visual do mini equalizador exibido na pílula da barra superior.</description>
@@ -108,7 +108,7 @@
       <description>Anima as barras do visualizador de ondas durante a reprodução.</description>
     </key>
 
-    <key name="waveform-style" enum="org.gnome.shell.extensions.tundra-media-pill.WaveformStyle">
+    <key name="waveform-style" enum="org.gnome.shell.extensions.soundpill.WaveformStyle">
       <default>'classic'</default>
       <summary>Estilo das ondas</summary>
       <description>Define o formato visual da barra de progresso e ondas no card e no widget.</description>
@@ -150,7 +150,7 @@
       <description>Exibe um widget flutuante de controle de mídia diretamente na área de trabalho.</description>
     </key>
 
-    <key name="desktop-widget-layer" enum="org.gnome.shell.extensions.tundra-media-pill.WidgetLayer">
+    <key name="desktop-widget-layer" enum="org.gnome.shell.extensions.soundpill.WidgetLayer">
       <default>'desktop'</default>
       <summary>Camada do widget</summary>
       <description>Define se o widget permanece na área de trabalho atrás das janelas ou sempre visível.</description>

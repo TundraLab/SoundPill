@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="./icons/tundra-media-pill.svg" alt="Tundra Media Pill" width="96" />
+  <img src="./icons/soundpill.svg" alt="SoundPill (by TundraLab)" width="96" />
 </p>
 
-# Tundra Media Pill v3.2.5
+# SoundPill (by TundraLab) v3.2.5
 
-[![GitHub](https://img.shields.io/badge/GitHub-TundraLab%2FTundra--Media--Pill-181717?logo=github)](https://github.com/TundraLab/Tundra-Media-Pill)
+[![GitHub](https://img.shields.io/badge/GitHub-TundraLab%2FSoundPill-181717?logo=github)](https://github.com/TundraLab/SoundPill)
 [![Autor Único](https://img.shields.io/badge/Autor%20e%20Dev%20Único-%40GustaHerin-181717?logo=github)](https://github.com/GustaHerin)
 [![Fedora](https://img.shields.io/badge/Fedora-Workstation-51A2DA?logo=fedora&logoColor=white)](#compatibilidade)
 [![Pop!_OS](https://img.shields.io/badge/Pop!__OS-GNOME-48B9C7?logo=popos&logoColor=white)](#compatibilidade)
@@ -17,7 +17,7 @@ Produto oficial da **TundraLab**, criado e desenvolvido de forma independente e 
 
 Extensão de mídia para a barra superior do GNOME com controles de reprodução, capa em vinil, letras sincronizadas, waveform personalizável e widget na área de trabalho.
 
-Repositório oficial: https://github.com/TundraLab/Tundra-Media-Pill
+Repositório oficial: https://github.com/TundraLab/SoundPill
 
 ---
 
@@ -82,19 +82,19 @@ sudo pacman -S --needed curl git tar glib2 libsoup3 gtk4 libadwaita gdk-pixbuf2 
 Execute o comando abaixo no terminal para baixar, compilar o esquema e instalar a extensão automaticamente:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TundraLab/Tundra-Media-Pill/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/TundraLab/SoundPill/main/install.sh | bash
 ```
 
 > **Para desinstalar:**
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/TundraLab/Tundra-Media-Pill/main/install.sh | bash -s -- --uninstall
+> curl -fsSL https://raw.githubusercontent.com/TundraLab/SoundPill/main/install.sh | bash -s -- --uninstall
 > ```
 
 ### Instalação manual pelo código-fonte
 
 ```bash
-git clone https://github.com/TundraLab/Tundra-Media-Pill.git
-cd Tundra-Media-Pill
+git clone https://github.com/TundraLab/SoundPill.git
+cd SoundPill
 chmod +x install.sh
 ./install.sh --copy
 ```
@@ -108,7 +108,7 @@ Pronto! A extensão já ficará ativada e configurada para iniciar sozinha sempr
 
 - **Na barra superior**: clique na pílula quando estiver ouvindo algo para abrir o player completo, controlar a reprodução e ver a letra.
 - **Na área de trabalho**: clique no ícone de pino dentro do menu do player para fixar ou remover o widget da área de trabalho. Você pode arrastá-lo pela tela ou travar a posição pelo cadeado.
-- **Configurações**: abra o aplicativo **Extensões** do GNOME e clique na engrenagem ao lado de **Tundra Media Pill** (ou no botão de configurações dentro do próprio player).
+- **Configurações**: abra o aplicativo **Extensões** do GNOME e clique na engrenagem ao lado de **SoundPill (by TundraLab)** (ou no botão de configurações dentro do próprio player).
 
 ---
 

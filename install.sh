@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-UUID="tundra-media-pill@tundralab.com.br"
-REPO_ARCHIVE_URL="https://github.com/TundraLab/Tundra-Media-Pill/archive/refs/heads/main.tar.gz"
-REPO_GIT_URL="https://github.com/TundraLab/Tundra-Media-Pill.git"
+UUID="soundpill@tundralab.com.br"
+LEGACY_UUID="tundra-media-pill@tundralab.com.br"
+REPO_ARCHIVE_URL="https://github.com/TundraLab/SoundPill/archive/refs/heads/main.tar.gz"
+REPO_GIT_URL="https://github.com/TundraLab/SoundPill.git"
 EXT_DIR="${HOME}/.local/share/gnome-shell/extensions"
 TARGET_DIR="${EXT_DIR}/${UUID}"
+LEGACY_TARGET_DIR="${EXT_DIR}/${LEGACY_UUID}"
 AUTOSTART_DIR="${HOME}/.config/autostart"
-AUTOSTART_FILE="${AUTOSTART_DIR}/tundra-media-pill-autostart.desktop"
+AUTOSTART_FILE="${AUTOSTART_DIR}/soundpill-autostart.desktop"
+LEGACY_AUTOSTART_FILE="${AUTOSTART_DIR}/tundra-media-pill-autostart.desktop"
 TMP_DIR=""
 
 cleanup() {
@@ -17,13 +20,22 @@ cleanup() {
 }
 trap cleanup EXIT
 
+remove_legacy_install() {
+    if command -v gnome-extensions >/dev/null 2>&1; then
+        gnome-extensions disable "${LEGACY_UUID}" >/dev/null 2>&1 || true
+    fi
+    rm -rf "${LEGACY_TARGET_DIR}"
+    rm -f "${LEGACY_AUTOSTART_FILE}"
+}
+
 uninstall_extension() {
     if command -v gnome-extensions >/dev/null 2>&1; then
         gnome-extensions disable "${UUID}" >/dev/null 2>&1 || true
     fi
     rm -rf "${TARGET_DIR}"
     rm -f "${AUTOSTART_FILE}"
-    echo "Tundra Media Pill removido de ${TARGET_DIR} e do autostart."
+    remove_legacy_install
+    echo "SoundPill (by TundraLab) removido de ${TARGET_DIR} e do autostart."
     exit 0
 }
 
@@ -204,7 +216,7 @@ if [[ "${NEED_DOWNLOAD}" == "0" ]]; then
 else
     MODE="copy"
     TMP_DIR="$(mktemp -d)"
-    echo "Baixando Tundra Media Pill..."
+    echo "Baixando SoundPill (by TundraLab)..."
     if command -v curl >/dev/null 2>&1 && command -v tar >/dev/null 2>&1; then
         curl -fsSL "${REPO_ARCHIVE_URL}" | tar -xz -C "${TMP_DIR}"
         SRC_DIR="$(find "${TMP_DIR}" -maxdepth 1 -mindepth 1 -type d | head -n 1)"
@@ -220,10 +232,12 @@ else
     fi
 
     if [[ -z "${SRC_DIR}" || ! -f "${SRC_DIR}/metadata.json" ]]; then
-        echo "Erro: falha ao obter os arquivos do Tundra Media Pill."
+        echo "Erro: falha ao obter os arquivos do SoundPill (by TundraLab)."
         exit 1
     fi
 fi
+
+remove_legacy_install
 
 echo "Compilando esquemas GSettings..."
 glib-compile-schemas --strict "${SRC_DIR}/schemas"
@@ -255,8 +269,8 @@ cat > "${AUTOSTART_FILE}" <<EOF
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Tundra Media Pill
-Comment=Garante a ativação automática da extensão Tundra Media Pill ao iniciar o Linux
+Name=SoundPill (by TundraLab)
+Comment=Garante a ativação automática da extensão SoundPill (by TundraLab) ao iniciar o Linux
 Exec=sh -c "sleep 2 && gsettings set org.gnome.shell disable-user-extensions false && gnome-extensions enable ${UUID}"
 Terminal=false
 NoDisplay=true

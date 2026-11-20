@@ -19,14 +19,14 @@ import {drawPillVisualizer} from './src/ui/waveform.js';
 const DEFAULT_MARQUEE_WIDTH = 220;
 const EQ_ANIM_INTERVAL_MS = 100;
 
-class TundraMediaPillIndicator extends PanelMenu.Button {
+class SoundPillIndicator extends PanelMenu.Button {
     static {
         GObject.registerClass(this);
     }
 
     constructor(controller, settings, openPreferencesCallback = null) {
-        super(0.5, 'Tundra Media Pill');
-        this.add_style_class_name('tundra-media-pill-button');
+        super(0.5, 'SoundPill (by TundraLab)');
+        this.add_style_class_name('soundpill-button');
         this._setIndicatorVisible(false);
 
         this._destroyed = false;
@@ -574,7 +574,7 @@ class TundraMediaPillIndicator extends PanelMenu.Button {
     }
 }
 
-export default class TundraMediaPillExtension extends Extension {
+export default class SoundPillExtension extends Extension {
     _openPreferencesSafely() {
         try {
             Promise.resolve(this.openPreferences()).catch(() => {});
@@ -633,12 +633,12 @@ export default class TundraMediaPillExtension extends Extension {
             pos = Main.panel._leftBox?.get_n_children() ?? 0;
         }
 
-        this._indicator = new TundraMediaPillIndicator(
+        this._indicator = new SoundPillIndicator(
             this._controller,
             this._settings,
             () => this._openPreferencesSafely()
         );
-        Main.panel.addToStatusArea('tundra-media-pill', this._indicator, pos, box);
+        Main.panel.addToStatusArea('soundpill', this._indicator, pos, box);
     }
 
     _syncDesktopWidget() {

@@ -35,7 +35,7 @@ const TRANSLATIONS = {
             instrumental: '♪ Faixa instrumental ♪',
         },
         prefs: {
-            windowTitle: 'Tundra Media Pill - Configurações',
+            windowTitle: 'SoundPill (by TundraLab) - Configurações',
             settingsTab: 'Configurações',
             aboutTab: 'Sobre',
 
@@ -223,7 +223,7 @@ const TRANSLATIONS = {
             instrumental: '♪ Instrumental track ♪',
         },
         prefs: {
-            windowTitle: 'Tundra Media Pill - Settings',
+            windowTitle: 'SoundPill (by TundraLab) - Settings',
             settingsTab: 'Settings',
             aboutTab: 'About',
 

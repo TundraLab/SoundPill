@@ -119,7 +119,7 @@ export class LyricsClient {
     constructor() {
         this._session = new Soup.Session({
             timeout: 10,
-            user_agent: 'TundraMediaPill/1.0 (https://tundralab.com.br)',
+            user_agent: 'SoundPill/1.0 (https://tundralab.com.br)',
         });
         this._cache = new Map();
         this._inflight = new Map();

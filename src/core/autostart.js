@@ -1,14 +1,15 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
-export const EXTENSION_UUID = 'tundra-media-pill@tundralab.com.br';
-const AUTOSTART_FILENAME = 'tundra-media-pill-autostart.desktop';
+export const EXTENSION_UUID = 'soundpill@tundralab.com.br';
+const AUTOSTART_FILENAME = 'soundpill-autostart.desktop';
+const LEGACY_AUTOSTART_FILENAME = 'tundra-media-pill-autostart.desktop';
 
 const DESKTOP_ENTRY_CONTENT = `[Desktop Entry]
 Type=Application
 Version=1.0
-Name=Tundra Media Pill
-Comment=Garante a ativação automática da extensão Tundra Media Pill ao iniciar o Linux
+Name=SoundPill (by TundraLab)
+Comment=Garante a ativação automática da extensão SoundPill (by TundraLab) ao iniciar o Linux
 Exec=sh -c "sleep 2 && gsettings set org.gnome.shell disable-user-extensions false && gnome-extensions enable ${EXTENSION_UUID}"
 Terminal=false
 NoDisplay=true
@@ -28,8 +29,16 @@ export function getAutostartFilePath() {
 export function syncAutostartEntry(enabled) {
     const filePath = getAutostartFilePath();
     const file = Gio.File.new_for_path(filePath);
+    const legacyFile = Gio.File.new_for_path(GLib.build_filenamev([
+        GLib.get_user_config_dir(),
+        'autostart',
+        LEGACY_AUTOSTART_FILENAME,
+    ]));
 
     try {
+        if (legacyFile.query_exists(null))
+            legacyFile.delete(null);
+
         if (enabled) {
             const dirPath = GLib.path_get_dirname(filePath);
             GLib.mkdir_with_parents(dirPath, 0o755);
@@ -51,7 +60,7 @@ export function syncAutostartEntry(enabled) {
             file.delete(null);
         return true;
     } catch (e) {
-        console.error('[TundraMediaPill] Falha ao atualizar autostart:', e);
+        console.error('[SoundPill] Falha ao atualizar autostart:', e);
         return false;
     }
 }
@@ -60,7 +69,7 @@ export function syncAutostartEntry(enabled) {
 export function clearCoverCache() {
     const cacheDir = GLib.build_filenamev([
         GLib.get_user_cache_dir(),
-        'tundra-media-pill',
+        'soundpill',
     ]);
     const dirFile = Gio.File.new_for_path(cacheDir);
     if (!dirFile.query_exists(null))
@@ -81,7 +90,7 @@ export function clearCoverCache() {
         }
         enumerator.close(null);
     } catch (e) {
-        console.error('[TundraMediaPill] Falha ao limpar cache de capas:', e);
+        console.error('[SoundPill] Falha ao limpar cache de capas:', e);
     }
     return removed;
 }

@@ -145,7 +145,7 @@ function createAccentCssProvider() {
     return provider;
 }
 
-export default class TundraMediaPillPreferences extends ExtensionPreferences {
+export default class SoundPillPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
         window.set_default_size(580, 740);
@@ -677,14 +677,14 @@ export default class TundraMediaPillPreferences extends ExtensionPreferences {
             margin_end: 16,
         });
 
-        const iconPath = GLib.build_filenamev([this.path, 'icons', 'tundra-media-pill.svg']);
+        const iconPath = GLib.build_filenamev([this.path, 'icons', 'soundpill.svg']);
         const appIcon = Gio.File.new_for_path(iconPath).query_exists(null)
             ? new Gtk.Image({file: iconPath, pixel_size: 84})
             : new Gtk.Image({icon_name: 'media-optical-cd-audio-symbolic', pixel_size: 56});
         heroBox.append(appIcon);
 
         const appTitle = new Gtk.Label({
-            label: this.metadata.name || 'Tundra Media Pill',
+            label: this.metadata.name || 'SoundPill (by TundraLab)',
         });
         appTitle.add_css_class('title-1');
         heroBox.append(appTitle);
@@ -737,7 +737,7 @@ export default class TundraMediaPillPreferences extends ExtensionPreferences {
         addInfoRow(t.aboutOrgLabel, 'TundraLab');
         addInfoRow(t.aboutVersionLabel, `v${versionStr}`);
         addInfoRow(t.aboutShellLabel, shells);
-        addInfoRow(t.aboutUuidLabel, this.metadata.uuid || 'tundra-media-pill@tundralab.com.br');
+        addInfoRow(t.aboutUuidLabel, this.metadata.uuid || 'soundpill@tundralab.com.br');
         addInfoRow(t.aboutLicenseLabel, t.aboutLicenseValue);
         aboutPage.add(infoGroup);
 
@@ -773,8 +773,8 @@ export default class TundraMediaPillPreferences extends ExtensionPreferences {
         );
         addLinkRow(
             t.aboutGhOrgTitle,
-            'https://github.com/TundraLab/Tundra-Media-Pill',
-            'https://github.com/TundraLab/Tundra-Media-Pill'
+            'https://github.com/TundraLab/SoundPill',
+            'https://github.com/TundraLab/SoundPill'
         );
         addLinkRow(
             t.aboutGhAuthorTitle,

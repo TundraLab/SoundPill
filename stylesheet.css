@@ -1,6 +1,6 @@
-/* Tundra Media Pill */
+/* SoundPill (by TundraLab) */
 
-.tundra-media-pill-button {
+.soundpill-button {
     padding: 0;
     margin: 2px 4px;
     background-color: transparent;
@@ -9,10 +9,10 @@
     box-shadow: none;
 }
 
-.tundra-media-pill-button:hover,
-.tundra-media-pill-button:active,
-.tundra-media-pill-button:focus,
-.tundra-media-pill-button:checked {
+.soundpill-button:hover,
+.soundpill-button:active,
+.soundpill-button:focus,
+.soundpill-button:checked {
     background-color: transparent;
     box-shadow: none;
 }
@@ -27,13 +27,13 @@
     transition-duration: 160ms;
 }
 
-.tundra-media-pill-button:hover .tundra-pill-box {
+.soundpill-button:hover .tundra-pill-box {
     background-color: rgba(34, 40, 54, 0.86);
     border-color: rgba(255, 255, 255, 0.24);
 }
 
-.tundra-media-pill-button:checked .tundra-pill-box,
-.tundra-media-pill-button:active .tundra-pill-box {
+.soundpill-button:checked .tundra-pill-box,
+.soundpill-button:active .tundra-pill-box {
     background-color: rgba(38, 46, 62, 0.92);
     border-color: rgba(124, 196, 250, 0.55);
 }
