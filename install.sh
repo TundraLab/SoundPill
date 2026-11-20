@@ -280,10 +280,19 @@ EOF
 
 if command -v gsettings >/dev/null 2>&1; then
     gsettings set org.gnome.shell disable-user-extensions false || true
+    CURRENT_EXTS="$(gsettings get org.gnome.shell enabled-extensions 2>/dev/null || true)"
+    if [[ -n "${CURRENT_EXTS}" && "${CURRENT_EXTS}" != *"${UUID}"* ]]; then
+        if [[ "${CURRENT_EXTS}" == "@as []" || "${CURRENT_EXTS}" == "[]" ]]; then
+            gsettings set org.gnome.shell enabled-extensions "['${UUID}']" >/dev/null 2>&1 || true
+        else
+            UPDATED_EXTS="${CURRENT_EXTS%\]}, '${UUID}']"
+            gsettings set org.gnome.shell enabled-extensions "${UPDATED_EXTS}" >/dev/null 2>&1 || true
+        fi
+    fi
 fi
 
 if command -v gnome-extensions >/dev/null 2>&1; then
-    gnome-extensions enable "${UUID}" || true
+    gnome-extensions enable "${UUID}" >/dev/null 2>&1 || true
 fi
 
 echo "Instalação concluída!"
