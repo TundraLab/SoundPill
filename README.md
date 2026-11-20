@@ -99,8 +99,7 @@ chmod +x install.sh
 ./install.sh --copy
 ```
 
-Após instalar, **reinicie a sessão** (faça logout e entre novamente no sistema; no X11, pressione `Alt + F2`, digite `r` e aperte `Enter`).
-
+Após instalar, **reinicie a sessão.**
 Pronto! A extensão já ficará ativada e configurada para iniciar sozinha sempre que você ligar o Linux.
 
 ---
