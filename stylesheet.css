@@ -1,0 +1,436 @@
+/* Tundra Media Pill */
+
+.tundra-media-pill-button {
+    padding: 0;
+    margin: 2px 4px;
+    background-color: transparent;
+    border: none;
+    border-radius: 999px;
+    box-shadow: none;
+}
+
+.tundra-media-pill-button:hover,
+.tundra-media-pill-button:active,
+.tundra-media-pill-button:focus,
+.tundra-media-pill-button:checked {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.tundra-pill-box {
+    spacing: 8px;
+    background-color: rgba(24, 28, 38, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    padding: 2px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+    transition-duration: 160ms;
+}
+
+.tundra-media-pill-button:hover .tundra-pill-box {
+    background-color: rgba(34, 40, 54, 0.86);
+    border-color: rgba(255, 255, 255, 0.24);
+}
+
+.tundra-media-pill-button:checked .tundra-pill-box,
+.tundra-media-pill-button:active .tundra-pill-box {
+    background-color: rgba(38, 46, 62, 0.92);
+    border-color: rgba(124, 196, 250, 0.55);
+}
+
+/* Pill vinyl cover */
+.tundra-pill-vinyl {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background-color: #141720;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-size: cover;
+}
+
+.tundra-pill-vinyl-spindle {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background-color: rgba(20, 22, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.tundra-pill-vinyl-fallback {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Marquee text */
+.tundra-marquee-scroll {
+    max-width: 220px;
+}
+
+.tundra-pill-label {
+    font-size: 9.5pt;
+    font-weight: 500;
+    color: #f1f3f5;
+    padding: 0 1px;
+}
+
+.tundra-pill-label-lyric {
+    color: #9cd4ff;
+}
+
+/* Pill equalizer */
+.tundra-pill-eq-canvas {
+    margin-left: 2px;
+}
+
+/* Dropdown menu and glassmorphism */
+.tundra-menu-item {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+.tundra-menu-item:hover,
+.tundra-menu-item:focus,
+.tundra-menu-item:active {
+    background-color: transparent;
+}
+
+.tundra-glass-popup {
+    -arrow-background-color: rgba(18, 22, 32, 0.78);
+    -arrow-border-color: rgba(255, 255, 255, 0.14);
+    -arrow-border-width: 1px;
+    -arrow-border-radius: 22px;
+}
+
+.tundra-card {
+    spacing: 14px;
+    width: 368px;
+    padding: 14px 16px 14px 16px;
+    border-radius: 20px;
+}
+
+.tundra-menu-card {
+    background-color: transparent;
+}
+
+.tundra-glass-card.tundra-menu-card {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Desktop widget */
+.tundra-desktop-widget {
+    spacing: 6px;
+    width: 380px;
+    padding: 10px 6px 6px 6px;
+    border-radius: 26px;
+    background-color: rgba(20, 24, 34, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.44);
+    transition-duration: 180ms;
+}
+
+.tundra-desktop-widget.tundra-glass-widget {
+    background-gradient-direction: vertical;
+    background-gradient-start: rgba(28, 34, 48, 0.78);
+    background-gradient-end: rgba(14, 18, 28, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+}
+
+.tundra-desktop-widget:hover {
+    border-color: rgba(124, 196, 250, 0.32);
+}
+
+.tundra-desktop-widget-dragging {
+    border-color: rgba(124, 196, 250, 0.65);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.5);
+}
+
+.tundra-desktop-card {
+    padding: 2px 10px 10px 10px;
+}
+
+.tundra-desktop-handle {
+    padding: 0 10px;
+    height: 30px;
+}
+
+.tundra-desktop-actions {
+    spacing: 6px;
+}
+
+.tundra-desktop-grip {
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.26);
+    transition-duration: 140ms;
+}
+
+.tundra-desktop-widget:hover .tundra-desktop-grip {
+    background-color: rgba(124, 196, 250, 0.58);
+}
+
+/* Card header */
+.tundra-card-header {
+    spacing: 14px;
+    padding-bottom: 2px;
+}
+
+.tundra-card-cover-btn {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background-color: transparent;
+    border-radius: 18px;
+}
+
+.tundra-card-cover {
+    width: 96px;
+    height: 96px;
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background-size: cover;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
+    transition-duration: 140ms;
+}
+
+.tundra-card-cover-btn:hover .tundra-card-cover {
+    border-color: rgba(255, 255, 255, 0.42);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+.tundra-card-cover-fallback {
+    color: rgba(255, 255, 255, 0.58);
+}
+
+.tundra-card-meta {
+    spacing: 5px;
+    padding-left: 2px;
+}
+
+.tundra-card-top-row {
+    spacing: 6px;
+}
+
+.tundra-card-source {
+    font-size: 8.5pt;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.tundra-card-title {
+    font-size: 12.5pt;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.tundra-card-artist {
+    font-size: 10pt;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.74);
+}
+
+.tundra-ghost-icon-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.72);
+    transition-duration: 140ms;
+}
+
+.tundra-ghost-icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+}
+
+.tundra-ghost-icon-btn-active {
+    background-color: rgba(94, 181, 255, 0.26);
+    border-color: rgba(124, 196, 250, 0.65);
+    color: #b8e1ff;
+}
+
+.tundra-ghost-icon-btn-active:hover {
+    background-color: rgba(94, 181, 255, 0.38);
+    color: #ffffff;
+}
+
+/* Dynamic waveform progress bar */
+.tundra-wave-section {
+    spacing: 6px;
+    padding: 2px 0;
+}
+
+.tundra-wave-box {
+    height: 42px;
+    padding: 6px 10px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    transition-duration: 140ms;
+}
+
+.tundra-wave-box-seekable:hover {
+    background-color: rgba(255, 255, 255, 0.075);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.tundra-wave-canvas {
+    height: 30px;
+}
+
+.tundra-time-label-scrubbing {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.tundra-time-row {
+    padding: 0 4px;
+}
+
+.tundra-time-label {
+    font-size: 8.5pt;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* Playback controls */
+.tundra-controls-box {
+    spacing: 16px;
+    padding: 2px 0;
+}
+
+.tundra-control-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+    transition-duration: 150ms;
+}
+
+.tundra-control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.17);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #ffffff;
+}
+
+.tundra-control-btn:active {
+    background-color: rgba(255, 255, 255, 0.26);
+}
+
+.tundra-control-btn-disabled {
+    opacity: 0.36;
+}
+
+.tundra-play-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 999px;
+    background-color: rgba(94, 181, 255, 0.28);
+    border: 1px solid rgba(124, 196, 250, 0.75);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(94, 181, 255, 0.28);
+    transition-duration: 150ms;
+}
+
+.tundra-play-btn:hover {
+    background-color: rgba(94, 181, 255, 0.44);
+    border-color: rgba(165, 216, 255, 0.94);
+    box-shadow: 0 6px 22px rgba(94, 181, 255, 0.42);
+}
+
+.tundra-play-btn:active {
+    background-color: rgba(94, 181, 255, 0.56);
+}
+
+.tundra-toggle-active {
+    background-color: rgba(94, 181, 255, 0.22);
+    border-color: rgba(124, 196, 250, 0.58);
+    color: #a5d8ff;
+}
+
+.tundra-toggle-active:hover {
+    background-color: rgba(94, 181, 255, 0.34);
+}
+
+/* Lyrics panel */
+.tundra-lyrics-panel {
+    border-radius: 16px;
+    background-color: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px 4px;
+}
+
+.tundra-lyrics-scroll {
+    height: 196px;
+}
+
+.tundra-lyrics-scroll-compact {
+    height: 168px;
+}
+
+.tundra-lyrics-scroll.tundra-lyrics-scroll-status,
+.tundra-lyrics-scroll-compact.tundra-lyrics-scroll-status {
+    height: 34px;
+}
+
+.tundra-lyrics-scroll StScrollBar {
+    padding: 2px 3px;
+}
+
+.tundra-lyrics-scroll StScrollBar StButton#vhandle {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    min-width: 4px;
+    width: 4px;
+}
+
+.tundra-lyrics-scroll StScrollBar StButton#vhandle:hover,
+.tundra-lyrics-scroll StScrollBar StButton#vhandle:active {
+    background-color: rgba(124, 196, 250, 0.62);
+}
+
+.tundra-lyrics-content {
+    spacing: 6px;
+    padding: 10px 10px;
+}
+
+.tundra-lyric-line {
+    font-size: 9.5pt;
+    color: rgba(255, 255, 255, 0.82);
+    padding: 5px 8px;
+    border-radius: 8px;
+}
+
+.tundra-lyric-line-near {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tundra-lyric-line-past {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.tundra-lyric-line-plain {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.tundra-lyric-line-active {
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #ffffff;
+    background-gradient-direction: horizontal;
+    background-gradient-start: rgba(94, 181, 255, 0.28);
+    background-gradient-end: rgba(94, 181, 255, 0.06);
+    border: 1px solid rgba(124, 196, 250, 0.42);
+}
+
+.tundra-lyrics-status {
+    font-size: 9pt;
+    color: rgba(255, 255, 255, 0.58);
+    padding: 4px 8px;
+}

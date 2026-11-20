@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#192338"/>
+      <stop offset="55%" stop-color="#101624"/>
+      <stop offset="100%" stop-color="#090D16"/>
+    </linearGradient>
+
+    <radialGradient id="auroraGlow" cx="50%" cy="46%" r="52%">
+      <stop offset="0%" stop-color="#5EB5FF" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#22D3EE" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#090D16" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="pillBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#24314B"/>
+      <stop offset="100%" stop-color="#151D2E"/>
+    </linearGradient>
+
+    <linearGradient id="pillBorder" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8CD1FF" stop-opacity="0.72"/>
+      <stop offset="50%" stop-color="#5EB5FF" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0.62"/>
+    </linearGradient>
+
+    <linearGradient id="vinylLabel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8CD1FF"/>
+      <stop offset="50%" stop-color="#5EB5FF"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+
+    <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A5E2FF"/>
+      <stop offset="50%" stop-color="#5EB5FF"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+
+    <linearGradient id="squircleBorder" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8CD1FF" stop-opacity="0.34"/>
+      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.06"/>
+    </linearGradient>
+
+    <filter id="pillShadow" x="-15%" y="-25%" width="130%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.48"/>
+    </filter>
+  </defs>
+
+  <!-- Base squircle badge -->
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#bgGrad)"/>
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#auroraGlow)"/>
+  <rect x="8.75" y="8.75" width="110.5" height="110.5" rx="27.25" fill="none" stroke="url(#squircleBorder)" stroke-width="1.5"/>
+
+  <!-- Dynamic Island pill -->
+  <g filter="url(#pillShadow)">
+    <rect x="17" y="42" width="94" height="44" rx="22" fill="url(#pillBg)"/>
+    <rect x="17.75" y="42.75" width="92.5" height="42.5" rx="21.25" fill="none" stroke="url(#pillBorder)" stroke-width="1.5"/>
+  </g>
+
+  <!-- Spinning vinyl cover -->
+  <g transform="translate(39, 64)">
+    <circle cx="0" cy="0" r="15.5" fill="#0B0F18" stroke="#FFFFFF" stroke-opacity="0.24" stroke-width="1"/>
+    <circle cx="0" cy="0" r="12.2" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="0.9"/>
+    <circle cx="0" cy="0" r="9.3" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="0.9"/>
+    <!-- Vinyl specular sheen -->
+    <path d="M -10 -7 A 12 12 0 0 1 6 -10.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M 10 7 A 12 12 0 0 1 -5 10.8" fill="none" stroke="#5EB5FF" stroke-opacity="0.25" stroke-width="1.2" stroke-linecap="round"/>
+    <!-- Center label and spindle -->
+    <circle cx="0" cy="0" r="6.2" fill="url(#vinylLabel)"/>
+    <circle cx="0" cy="0" r="2.2" fill="#0E131F" stroke="#FFFFFF" stroke-opacity="0.65" stroke-width="0.7"/>
+  </g>
+
+  <!-- Animated-style waveform bars -->
+  <g fill="url(#waveGrad)">
+    <rect x="64"   y="58.5" width="3.8" height="11" rx="1.9"/>
+    <rect x="70.8" y="53"   width="3.8" height="22" rx="1.9"/>
+    <rect x="77.6" y="49.5" width="3.8" height="29" rx="1.9"/>
+    <rect x="84.4" y="54.5" width="3.8" height="19" rx="1.9"/>
+    <rect x="91.2" y="57.5" width="3.8" height="13" rx="1.9"/>
+    <rect x="98"   y="60"   width="3.8" height="8"  rx="1.9" opacity="0.85"/>
+  </g>
+</svg>

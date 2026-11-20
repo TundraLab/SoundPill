@@ -1,0 +1,16 @@
+{
+  "name": "Tundra Media Pill",
+  "description": "Dynamic Island style MPRIS2 media pill with spinning vinyl album art, animated equalizer waves, and synchronized LRCLIB lyrics.",
+  "uuid": "tundra-media-pill@tundralab.com.br",
+  "settings-schema": "org.gnome.shell.extensions.tundra-media-pill",
+  "shell-version": [
+    "47",
+    "48",
+    "49",
+    "50",
+    "51"
+  ],
+  "version": 3,
+  "version-name": "3.2.5",
+  "url": "https://tundralab.com.br"
+}

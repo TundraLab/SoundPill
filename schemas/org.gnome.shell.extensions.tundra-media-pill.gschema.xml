@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <enum id="org.gnome.shell.extensions.tundra-media-pill.PanelPosition">
+    <value nick="left" value="0"/>
+    <value nick="center" value="1"/>
+    <value nick="right" value="2"/>
+  </enum>
+
+  <enum id="org.gnome.shell.extensions.tundra-media-pill.WidgetLayer">
+    <value nick="desktop" value="0"/>
+    <value nick="floating" value="1"/>
+  </enum>
+
+  <enum id="org.gnome.shell.extensions.tundra-media-pill.WaveformStyle">
+    <value nick="classic" value="0"/>
+    <value nick="mirror" value="1"/>
+    <value nick="equalizer" value="2"/>
+    <value nick="dots" value="3"/>
+    <value nick="pill-slider" value="4"/>
+    <value nick="blocks" value="5"/>
+    <value nick="sine-wave" value="6"/>
+    <value nick="pulse-ribbon" value="7"/>
+    <value nick="heartbeat" value="8"/>
+    <value nick="dual-rail" value="9"/>
+  </enum>
+
+  <enum id="org.gnome.shell.extensions.tundra-media-pill.PillEqStyle">
+    <value nick="bars" value="0"/>
+    <value nick="mirror" value="1"/>
+    <value nick="equalizer" value="2"/>
+    <value nick="sine" value="3"/>
+    <value nick="dots" value="4"/>
+    <value nick="blocks" value="5"/>
+    <value nick="pulse" value="6"/>
+  </enum>
+
+  <enum id="org.gnome.shell.extensions.tundra-media-pill.Language">
+    <value nick="auto" value="0"/>
+    <value nick="pt" value="1"/>
+    <value nick="en" value="2"/>
+  </enum>
+
+  <schema id="org.gnome.shell.extensions.tundra-media-pill" path="/org/gnome/shell/extensions/tundra-media-pill/">
+    <key name="language" enum="org.gnome.shell.extensions.tundra-media-pill.Language">
+      <default>'auto'</default>
+      <summary>Idioma da interface / Interface language</summary>
+      <description>Define o idioma exibido na extensão e nas configurações.</description>
+    </key>
+
+    <key name="panel-position" enum="org.gnome.shell.extensions.tundra-media-pill.PanelPosition">
+      <default>'center'</default>
+      <summary>Posição da pílula na barra superior</summary>
+      <description>Define em qual região da barra superior do GNOME a pílula será exibida.</description>
+    </key>
+
+    <key name="marquee-max-width" type="i">
+      <range min="120" max="420"/>
+      <default>220</default>
+      <summary>Largura máxima do texto na pílula</summary>
+      <description>Largura máxima em pixels antes do texto iniciar rolagem horizontal.</description>
+    </key>
+
+    <key name="show-when-idle" type="b">
+      <default>false</default>
+      <summary>Manter pílula visível quando ocioso</summary>
+      <description>Exibe a pílula na barra superior mesmo sem nenhum player ativo.</description>
+    </key>
+
+    <key name="show-lyrics-in-pill" type="b">
+      <default>true</default>
+      <summary>Exibir letras sincronizadas na pílula</summary>
+      <description>Mostra a linha atual da letra no texto da pílula quando disponível.</description>
+    </key>
+
+    <key name="enable-lyrics-fetch" type="b">
+      <default>true</default>
+      <summary>Buscar letras online via LRCLIB</summary>
+      <description>Consulta letras sincronizadas e estáticas automaticamente na API do LRCLIB.</description>
+    </key>
+
+    <key name="enable-album-art" type="b">
+      <default>true</default>
+      <summary>Carregar capas de álbum</summary>
+      <description>Exibe a arte da capa fornecida pelo player ou baixada em cache local.</description>
+    </key>
+
+    <key name="enable-vinyl-spin" type="b">
+      <default>true</default>
+      <summary>Girar capa em formato de vinil</summary>
+      <description>Anima a rotação contínua do disco na pílula durante a reprodução.</description>
+    </key>
+
+    <key name="enable-pill-eq" type="b">
+      <default>true</default>
+      <summary>Exibir barras do equalizador na pílula</summary>
+      <description>Mostra as barras animadas do equalizador ao lado do texto da pílula.</description>
+    </key>
+
+    <key name="pill-eq-style" enum="org.gnome.shell.extensions.tundra-media-pill.PillEqStyle">
+      <default>'bars'</default>
+      <summary>Estilo das ondas na pílula</summary>
+      <description>Define o estilo visual do mini equalizador exibido na pílula da barra superior.</description>
+    </key>
+
+    <key name="enable-menu-waves" type="b">
+      <default>true</default>
+      <summary>Exibir visualizador de ondas</summary>
+      <description>Anima as barras do visualizador de ondas durante a reprodução.</description>
+    </key>
+
+    <key name="waveform-style" enum="org.gnome.shell.extensions.tundra-media-pill.WaveformStyle">
+      <default>'classic'</default>
+      <summary>Estilo das ondas</summary>
+      <description>Define o formato visual da barra de progresso e ondas no card e no widget.</description>
+    </key>
+
+    <key name="enable-wave-seek" type="b">
+      <default>true</default>
+      <summary>Navegar no áudio pela barra de ondas</summary>
+      <description>Permite clicar, arrastar ou usar a rolagem na onda para ir a qualquer momento da música.</description>
+    </key>
+
+    <key name="enable-glassmorphism" type="b">
+      <default>true</default>
+      <summary>Ativar efeito Glassmorphism</summary>
+      <description>Aplica desfoque real de fundo e superfícies translúcidas no card e no widget.</description>
+    </key>
+
+    <key name="accent-color" type="s">
+      <default>'#5EB5FF'</default>
+      <summary>Cor de destaque</summary>
+      <description>Cor hexadecimal aplicada nos botões, waveform, equalizador e letra ativa.</description>
+    </key>
+
+    <key name="accent-from-music" type="b">
+      <default>false</default>
+      <summary>Destaque conforme a música</summary>
+      <description>Adapta automaticamente a cor de destaque usando a capa do álbum em reprodução.</description>
+    </key>
+
+    <key name="menu-show-lyrics" type="b">
+      <default>true</default>
+      <summary>Mostrar letras no menu da barra</summary>
+      <description>Exibe o painel de letras sincronizadas no menu da pílula.</description>
+    </key>
+
+    <key name="desktop-widget-enabled" type="b">
+      <default>false</default>
+      <summary>Widget na área de trabalho</summary>
+      <description>Exibe um widget flutuante de controle de mídia diretamente na área de trabalho.</description>
+    </key>
+
+    <key name="desktop-widget-layer" enum="org.gnome.shell.extensions.tundra-media-pill.WidgetLayer">
+      <default>'desktop'</default>
+      <summary>Camada do widget</summary>
+      <description>Define se o widget permanece na área de trabalho atrás das janelas ou sempre visível.</description>
+    </key>
+
+    <key name="desktop-widget-locked" type="b">
+      <default>false</default>
+      <summary>Travar posição do widget</summary>
+      <description>Impede que o widget seja movido acidentalmente ao arrastar com o mouse.</description>
+    </key>
+
+    <key name="desktop-widget-show-lyrics" type="b">
+      <default>true</default>
+      <summary>Mostrar letras no widget da área de trabalho</summary>
+      <description>Exibe o painel de letras sincronizadas também no widget da área de trabalho.</description>
+    </key>
+
+    <key name="desktop-widget-x" type="i">
+      <default>-1</default>
+      <summary>Posição X do widget</summary>
+      <description>Coordenada horizontal salva do widget (-1 usa posição padrão).</description>
+    </key>
+
+    <key name="desktop-widget-y" type="i">
+      <default>-1</default>
+      <summary>Posição Y do widget</summary>
+      <description>Coordenada vertical salva do widget (-1 usa posição padrão).</description>
+    </key>
+
+    <key name="autostart-enabled" type="b">
+      <default>true</default>
+      <summary>Iniciar automaticamente com o Linux</summary>
+      <description>Cria a entrada de autostart na sessão para garantir a ativação da extensão ao fazer login.</description>
+    </key>
+  </schema>
+</schemalist>
